@@ -18,17 +18,27 @@ export default {
                   lastName: 'Cisneros',
                   areas: ['frontend', 'career'],
                   description:
-                    'I am Julie and as a senior developer in a big tech company, I can help you get your first job or progress in your current role.',
+                    'I am Jose and as a senior developer in a big tech company, I can help you get your first job or progress in your current role.',
                   hourlyRate: 30
                 }
               ]
           };
       },
       mutations: {
-  
+        registerCoach(state, payload) {
+          state.coaches.push(payload);
+        }
       },
       actions: {
-  
+        registerCoach(context, payload) {
+          const coachData = {
+            firstName: payload.first,
+            lastName: payload.last,
+            description: payload.description,
+            hourlyRate: payload.rate,
+            areas: payload.areas
+          };
+        }
       }, 
       getters: {
           coaches(state) {
