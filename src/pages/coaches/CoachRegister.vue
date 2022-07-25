@@ -12,9 +12,13 @@ export default {
     components: {
         CoachForm
     },
+    computed: {
+        
+    },
     methods: {
         saveData(data) {
-            return this.$dispatch('register-coach', data);
+            this.$store.dispatch('coaches/registerCoach', data);
+            this.$router.replace('/coaches');
         }
     }
 }

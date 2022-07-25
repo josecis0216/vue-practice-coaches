@@ -10,8 +10,8 @@ const store = createStore({
     }, 
     state() {
         return {
-            
-        }
+            userId: 'c3'
+        };
     }, 
     mutations: {
 
@@ -20,7 +20,9 @@ const store = createStore({
 
     }, 
     getters: {
-
+        userId(state) {
+            return state.userId;
+        }
     }
 });
 
