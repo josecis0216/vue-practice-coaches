@@ -19,7 +19,8 @@ export default {
                 message: payload.message
             };
             context.commit('addRequest', requestData);
-        }
+        },
+        
       }, 
       getters: {
           requests(state, _, _2, rootGetters) {
