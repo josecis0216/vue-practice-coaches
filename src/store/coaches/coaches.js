@@ -20,7 +20,16 @@ export default {
                   description:
                     'I am Jose and as a senior developer in a big tech company, I can help you get your first job or progress in your current role.',
                   hourlyRate: 30
-                }
+                },
+                {
+                    id: 'c3',
+                    firstName: 'Jose',
+                    lastName: 'Test',
+                    areas: ['frontend', 'career'],
+                    description:
+                      'I am Jose and as a senior developer in a big tech company, I can help you get your first job or progress in your current role.',
+                    hourlyRate: 30
+                  }
               ]
           };
       },
@@ -70,6 +79,7 @@ export default {
             const coaches = [];
             for(const key in responseData) {
                 const coachData = {
+                    id: key,
                     firstName: responseData[key].firstName,
                     lastName: responseData[key].lastName,
                     description: responseData[key].description,

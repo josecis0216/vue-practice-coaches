@@ -1,10 +1,16 @@
 <template>
   <section>
+    <base-dialogue :show="!!error" title="An error occured!!" @close="handleError">
+    <p>{{ error }}</p>
+    </base-dialogue>
     <base-card>
       <header>
         <h2>Requests Received</h2>
       </header>
-      <ul v-if="hasRequests">
+      <div v-if="isLoading">
+      <base-spinner></base-spinner>
+      </div>
+      <ul v-else-if="hasRequests">
         <request-item
           v-for="req in receivedRequests"
           :key="req.id"
@@ -24,6 +30,12 @@ export default {
   components: {
     RequestItem,
   },
+  data() {
+    return {
+      isLoading: false,
+      error: null
+    };
+  },
   computed: {
     receivedRequests() {
       return this.$store.getters['reqs/requests'];
@@ -32,6 +44,11 @@ export default {
       return this.$store.getters['reqs/hasRequests'];
     },
   },
+  methods: {
+    handleError() {
+      this.error = null;
+    }
+  }
 };
 </script>
 
