@@ -73,7 +73,8 @@ export default {
             const responseData = await response.json();
 
             if (!response.ok) {
-                //....
+                const error = new Error(responseData.message || "Failed to send!");
+                throw error;
             }
 
             const coaches = [];

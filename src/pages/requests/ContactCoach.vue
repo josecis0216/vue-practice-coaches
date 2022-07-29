@@ -1,50 +1,49 @@
 <template>
-    <form @submit.prevent="submitForm">
-        <div class="form-control">
-            <label for="email">
-                Your E-mail
-            </label>
-            <input type="email" id="email" v-model.trim="email" />
-        </div>
-        <div class="form-control">
-            <label for="message">
-                Your Message
-            </label>
-            <textarea rows="5" id="message" v-model.trim="message"></textarea>
-        </div>
-        <div class="actions">
-            <base-button>Send Message</base-button>
-        </div>
-    </form>
+  <form @submit.prevent="submitForm">
+    <div class="form-control">
+      <label for="email"> Your E-mail </label>
+      <input type="email" id="email" v-model.trim="email" />
+    </div>
+    <div class="form-control">
+      <label for="message"> Your Message </label>
+      <textarea rows="5" id="message" v-model.trim="message"></textarea>
+    </div>
+    <div class="actions">
+      <base-button>Send Message</base-button>
+    </div>
+  </form>
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            email: '',
-            message: '',
-            isValid: true
-        };
+  data() {
+    return {
+      email: '',
+      message: '',
+      isValid: true,
+    };
+  },
+  methods: {
+    submitForm() {
+      this.isValid = true;
+      if (
+        this.email === '' ||
+        !this.email.includes('@') ||
+        this.message === ''
+      ) {
+        this.isValid = false;
+        return;
+      }
+      this.$store.dispatch('reqs/contactCoach', {
+        email: this.email,
+        message: this.message,
+        coachId: this.$route.params.id,
+      });
+      this.$router.replace('/coaches');
     },
-    methods: {
-        submitForm() {
-            this.isValid = true;
-            if(this.email === '' || !this.email.includes('@') || this.message === '') {
-                this.isValid = false;
-                return;
-            }
-            this.$store.dispatch('reqs/contactCoach', {
-                email: this.email,
-                message: this.message,
-                coachId: this.$route.params.id
-            });
-            this.$router.replace('/coaches');
-        }
-    }
-}
+  },
+};
 </script>
-
 
 <style scoped>
 form {

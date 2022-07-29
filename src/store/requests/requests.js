@@ -14,33 +14,38 @@ export default {
     }
   },
   actions: {
-    contactCoach(context, payload) {
-      const reqId = new Date().toISOString();
+    async contactCoach(context, payload) {
       const requestData = {
-        coachId: payload.coachId,
         userEmail: payload.email,
         message: payload.message,
       };
-      const response = await fetch(`https://vue-http-f9db8-default-rtdb.firebaseio.com/requests/${reqId}.json`, {
-            method: 'PUT',
+      const response = await fetch(`https://vue-http-f9db8-default-rtdb.firebaseio.com/requests/${payload.coachId}.json`, {
+            method: 'POST',
             body: JSON.stringify(requestData)
           })
 
-          //const responseData = await response.json();
+          const responseData = await response.json();
 
           if (!response.ok) {
-            // error ...
+            const error = new Error(responseData.message || 'failed to send request.');
+            throw error;
           }
 
-          context.commit('addRequest', {
-            ...requestData,
-            id: reqId
-          });
+          requestData.id = responseData.name;
+          requestData.coachId = payload.coachId;
+
+          context.commit('addRequest', requestData);
     },
     async loadRequests(context) {
-      const response = await fetch(`https://vue-http-f9db8-default-rtdb.firebaseio.com/requests.json`);
+      const coachId = context.getters.coachId;
+      const response = await fetch(`https://vue-http-f9db8-default-rtdb.firebaseio.com/${coachId}.json`);
 
-      const responseData = response.json();
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        const error = new Error(responseData.message || 'Failed to fetch data.');
+        throw error;
+      }
 
       const requests = [];
       for (const key in responseData) {
