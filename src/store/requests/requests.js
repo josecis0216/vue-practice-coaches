@@ -37,8 +37,8 @@ export default {
           context.commit('addRequest', requestData);
     },
     async loadRequests(context) {
-      const coachId = context.getters.coachId;
-      const response = await fetch(`https://vue-http-f9db8-default-rtdb.firebaseio.com/${coachId}.json`);
+      const coachId = context.rootGetters.userId;
+      const response = await fetch(`https://vue-http-f9db8-default-rtdb.firebaseio.com/requests/${coachId}.json`);
 
       const responseData = await response.json();
 
@@ -51,8 +51,8 @@ export default {
       for (const key in responseData) {
         const requestData = {
           id: key,
-          coachId: responseData[key].coachId,
-          userEmail: responseData[key].email,
+          coachId: coachId,
+          userEmail: responseData[key].userEmail,
           message: responseData[key].message,
         };
         requests.push(requestData);
@@ -63,7 +63,6 @@ export default {
   getters: {
     requests(state, _, _2, rootGetters) {
       const coachId = rootGetters.userId;
-      console.log(state.requests);
       return state.requests.filter((req) => req.coachId === coachId);
     },
     hasRequests(_, getters) {

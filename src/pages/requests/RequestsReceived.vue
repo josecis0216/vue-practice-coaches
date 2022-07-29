@@ -10,7 +10,7 @@
       <div v-if="isLoading">
       <base-spinner></base-spinner>
       </div>
-      <ul v-else-if="hasRequests">
+      <ul v-else-if="hasRequests && !isLoading">
         <request-item
           v-for="req in receivedRequests"
           :key="req.id"
@@ -36,6 +36,9 @@ export default {
       error: null
     };
   },
+  created() {
+    this.loadRequests();
+  },
   computed: {
     receivedRequests() {
       return this.$store.getters['reqs/requests'];
@@ -47,6 +50,15 @@ export default {
   methods: {
     handleError() {
       this.error = null;
+    },
+    async loadRequests() {
+      this.isLoading = true;
+      try {
+        await this.$store.dispatch('reqs/loadRequests');
+      } catch(error) {
+        this.error = new Error(error.message || 'Failed to get data');
+      }
+      this.isLoading = false;
     }
   }
 };
