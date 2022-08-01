@@ -19,7 +19,7 @@ export default {
         userEmail: payload.email,
         message: payload.message,
       };
-      const response = await fetch(`https://vue-http-f9db8-default-rtdb.firebaseio.com/requests/${payload.coachId}.json`, {
+      const response = await fetch(`https://vue-practice-88f8e-default-rtdb.firebaseio.com/requests/${payload.coachId}.json`, {
             method: 'POST',
             body: JSON.stringify(requestData)
           })
@@ -38,7 +38,7 @@ export default {
     },
     async loadRequests(context) {
       const coachId = context.rootGetters.userId;
-      const response = await fetch(`https://vue-http-f9db8-default-rtdb.firebaseio.com/requests/${coachId}.json`);
+      const response = await fetch(`https://vue-practice-88f8e-default-rtdb.firebaseio.com/requests/${coachId}.json`);
 
       const responseData = await response.json();
 

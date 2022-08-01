@@ -55,7 +55,7 @@ export default {
             hourlyRate: payload.rate,
             areas: payload.areas
           };
-          const response = await fetch(`https://vue-http-f9db8-default-rtdb.firebaseio.com/coaches/${coachId}.json`, {
+          const response = await fetch(`https://vue-practice-88f8e-default-rtdb.firebaseio.com/coaches/${coachId}.json`, {
             method: 'PUT',
             body: JSON.stringify(coachData)
           })
@@ -76,7 +76,7 @@ export default {
                 return;
             }
 
-            const response = await fetch(`https://vue-http-f9db8-default-rtdb.firebaseio.com/coaches.json`);
+            const response = await fetch(`https://vue-practice-88f8e-default-rtdb.firebaseio.com/coaches.json`);
 
             const responseData = await response.json();
 
