@@ -1,65 +1,106 @@
 <template>
-<base-card>
-  <form @submit.prevent="submitForm()">
+<div>
+  <base-dialogue :show="!!error" title="An error occurred" @close="handleError">
+    <p>{{ error }}</p>
+  </base-dialogue>
+  <base-dialogue :show="isLoading" fixed title="Authenticatin...">
+  <base-spinner></base-spinner>
+  </base-dialogue>
+  <base-card>
+    <form @submit.prevent="submitForm">
       <div class="form-control">
         <label for="email">Email</label>
         <input type="email" name="email" v-model.trim="email" />
       </div>
       <div class="form-control">
         <label for="password">password</label>
-        <input type="password" name="password" v-model.trim="password"/>
+        <input type="password" name="password" v-model.trim="password" />
       </div>
       <p v-if="!formIsValid">
         Please make sure email is valid, and password is 6 characters or more
       </p>
       <base-button>{{ submitButtonCaption }}</base-button>
-      <base-button type="button" mode="flat" @click="switchAuthMode()">{{ switchModeButtonCaption }}</base-button>
-  </form>
+      <base-button type="button" mode="flat" @click="switchAuthMode()">{{
+        switchModeButtonCaption
+      }}</base-button>
+    </form>
   </base-card>
+</div>
 </template>
 
 <script>
+import BaseDialogue from '../../components/ui/BaseDialogue.vue';
 export default {
-    data() {
-        return {
-            email: '',
-            password: '',
-            formIsValid: true,
-            mode: 'login'
-        };
+  components: { BaseDialogue },
+  data() {
+    return {
+      email: '',
+      password: '',
+      formIsValid: true,
+      mode: 'login',
+      isLoading: false,
+      error: null,
+    };
+  },
+  methods: {
+    handleError() {
+      this.error = null;
     },
-    methods: {
-        submitForm() {
-            if (!this.email === '' || !this.email.includes('@') || !this.password.length < 6) {
-                this.formIsValid = false;
-                return;
-            }
-        },
-        switchAuthMode() {
-            if (this.mode === 'login') {
-                this.mode = 'signup';
-            } else {
-                this.mode = 'login';
-            }
+    async submitForm() {
+      if (
+        this.email === '' ||
+        !this.email.includes('@') ||
+        this.password.length < 6
+      ) {
+        this.formIsValid = false;
+        return;
+      }
+      this.isLoading = true;
+
+      const actionPayload = {
+        email: this.email,
+        password: this.password
+      }
+
+      try {
+        if (this.mode === 'login') {
+          await this.$store.dispatch('login', actionPayload)
+        } else {
+          await this.$store.dispatch('signup', actionPayload);
         }
+        const redirectUrl = '/' + (this.$route.query.redirect || 'coaches');
+        this.$router.replace(redirectUrl);
+      } catch (err) {
+        this.error = err.message || 'Failed to authenticate, try later.';
+      }
+
+      this.isLoading = false;
     },
-    computed: {
-        submitButtonCaption() {
-            if (this.mode === 'login') {
-                return 'Login';
-            } else {
-                return 'Signup';
-            }
-        },
-        switchModeButtonCaption() {
-            if (this.mode === 'login') {
-                return 'Signup instead';
-            } else {
-                return 'Login instead';
-            }
-        }
-    }
-}
+    switchAuthMode() {
+      if (this.mode === 'login') {
+        this.mode = 'signup';
+      } else {
+        this.mode = 'login';
+      }
+    },
+  },
+  computed: {
+    submitButtonCaption() {
+      if (this.mode === 'login') {
+        return 'Login';
+      } else {
+        return 'Signup';
+      }
+    },
+    switchModeButtonCaption() {
+      if (this.mode === 'login') {
+        return 'Signup instead';
+      } else {
+        return 'Login instead';
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -91,4 +132,5 @@ textarea:focus {
   border-color: #3d008d;
   background-color: #faf6ff;
   outline: none;
-}</style>
+}
+</style>
